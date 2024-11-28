@@ -3,15 +3,22 @@ class BinarySearchTree {
         this.height = 0;
     }
 
-    insert(node){
+    insert(value){
+        var n = new Node(value, 1);
+        this.insertWithNode(n);
+    }
+
+    insertWithNode(node){
         if(this.root == null){
-            node.id = 0;
+            node.id = 1;
             this.root = node;
             this.root.position = 1;
             this.root.numLeft = 0;
             this.root.numRight = 0;
+            this.numNodes = 1;
         } else {
             this.insertNode(this.root, node);
+            this.numNodes++;
         }
     }
 
@@ -122,14 +129,54 @@ class BinarySearchTree {
 
     draw(){
         if(this != null)
-            drawNode(this.root);
+            this.drawCurrentNode(this.root);
     }
 
-    drawNode(node){
+    drawCurrentNode(node){
         if(node != null){
             //draw
-            this.drawNode(node.left);
-            this.drawNode(node.right);
+            var height = -1;
+            var level = 0
+            while(height == -1){
+                if(node.id < (2 ** level)){
+                    height = level;
+                } else {
+                    level++;
+                }
+            }
+            node.drawNode(node.position * 150, height * 150, 50);
+            this.drawCurrentNode(node.left);
+            this.drawCurrentNode(node.right);
+            if(node.left != null){
+                var height2 = -1;
+                var level = 0
+                while(height2 == -1){
+                    if(node.left.id < (2 ** level)){
+                        height2 = level;
+                    } else {
+                        level++;
+                    }
+                }
+                ctx.beginPath();
+                ctx.moveTo(node.position * 150, height * 150);
+                ctx.lineTo(node.left.position * 150, height2 * 150);
+                ctx.stroke();
+            }
+            if(node.right != null){
+                var height2 = -1;
+                var level = 0
+                while(height2 == -1){
+                    if(node.right.id < (2 ** level)){
+                        height2 = level;
+                    } else {
+                        level++;
+                    }
+                }
+                ctx.beginPath();
+                ctx.moveTo(node.position * 150, height * 150);
+                ctx.lineTo(node.right.position * 150, height2 * 150);
+                ctx.stroke();
+            }
         }
     }
 }
