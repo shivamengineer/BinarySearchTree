@@ -16,6 +16,7 @@ class BinarySearchTree {
             this.root.numLeft = 0;
             this.root.numRight = 0;
             this.numNodes = 1;
+            this.height = 1;
         } else {
             this.insertNode(this.root, node);
             this.numNodes++;
@@ -107,29 +108,185 @@ class BinarySearchTree {
         }
     }
 
-    rotateRight(node){
-        if(node.left != null){
-            var leftNode = node.left;
-            if(leftNode.right != null){
-                node.left = leftNode.right;
+    findNodeFromValue(value){
+        if(this.root == null){
+            return null;
+        } else {
+            var found = false;
+            var n = this.root;
+            while(!found){
+                if(n.value == value){
+                    return n;
+                } else if(n.value < value){
+                    console.log("right");
+                    if(n.right != null){
+                        n = n.right;
+                    } else {
+                        return null;
+                    }
+                } else if(n.value > value){
+                    console.log("left");
+                    if(n.left != null){
+                        n = n.left;
+                    } else {
+                        return null;
+                    }
+                }
             }
-            leftNode.right = node;
         }
     }
 
-    rotateLeft(node){
-        if(node.right != null){
-            var rightNode = node.right;
-            if(rightNode.left != null){
-                node.right = rightNode.left;
+    findParentFromValue(value){
+        if(this.root == null){
+            return null;
+        } else {
+            var found = false;
+            var n = this.root;
+            while(!found){
+                if(n.value < value){
+                    if(n.right != null){
+                        if(n.right.value == value){
+                            return n;
+                        } else {
+                            n = n.right;
+                        }
+                    } else {
+                        return null;
+                    }
+                } else if(n.value > value){
+                    if(n.left != null){
+                        if(n.left.value == value){
+                            return n;
+                        } else {
+                            n = n.left;
+                        }
+                    } else {
+                        return null;
+                    }
+                }
             }
-            rightNode.left = node;
+        }
+    }
+
+    resetPositionRight(node, parentID){
+        node.id = (parentID * 2) + 1;
+        if(node.left != null){
+            this.resetPositionLeft(node.left, node.id);
+        }
+        if(node.right != null){
+            this.resetPositionRight(node.right, node.id);
+        }
+    }
+
+    resetPositionLeft(node, parentID){
+        node.id = parentID * 2;
+        if(node.left != null){
+            this.resetPositionLeft(node.left, node.id);
+        }
+        if(node.right != null){
+            this.resetPositionRight(node.right, node.id);
+        }
+    }
+
+    rotateRight(value){
+        var n = this.findNodeFromValue(value);
+        if(n != null)
+            this.rotateNodeRight(n);
+    }
+
+    rotateNodeRight(node){
+        if(node.value == this.root.value){
+            if(this.root.left != null){
+                var n = this.root;
+                this.root = this.root.left;
+                if(this.root.right != null){
+                    n.left = this.root.right;
+                } else {
+                    n.left = null;
+                }
+                this.root.right = n;
+                this.root.id = 1;
+                if(this.root.left != null){
+                    this.resetPositionLeft(this.root.left, 1);
+                }
+                this.resetPositionRight(this.root.right, 1);
+            }
+        } else {
+            var parent = this.findParentFromValue(node.value);
+            if(node.left != null){
+                var leftNode = node.left;
+                if(leftNode.right != null){
+                    node.left = leftNode.right;
+                } else {
+                    node.left = null;
+                }
+                leftNode.right = node;
+                if(parent.left != null && parent.left.value == node.value){
+                    parent.left = leftNode;
+                    this.resetPositionLeft(leftNode, parent.id);
+                } else {
+                    parent.right = leftNode;
+                    this.resetPositionRight(leftNode, parent.id);
+                }
+            }
+        }
+    }
+
+    rotateLeft(value){
+        var n = this.findNodeFromValue(value);
+        if(n != null)
+            this.rotateNodeLeft(n);
+    }
+
+    rotateNodeLeft(node){
+        if(node.value == this.root.value){
+            if(this.root.right != null){
+                var n = this.root;
+                this.root = this.root.right;
+                if(this.root.left != null){
+                    n.right = this.root.left;
+                } else {
+                    n.right = null;
+                }
+                this.root.left = n;
+                this.root.id = 1;
+                if(this.root.right != null){
+                    this.resetPositionRight(this.root.right, 1);
+                }
+                this.resetPositionLeft(this.root.left, 1);
+            }
+        } else {
+            var parent = this.findParentFromValue(node.value);
+            if(node.right != null){
+                var rightNode = node.right;
+                if(rightNode.left != null){
+                    node.right = rightNode.left;
+                } else {
+                    node.right = null;
+                }
+                rightNode.left = node;
+                if(parent.right != null && parent.right.value == node.value){
+                    parent.right = rightNode;
+                    this.resetPositionRight(rightNode, parent.id);
+                } else {
+                    parent.left = rightNode;
+                    this.resetPositionLeft(rightNode, parent.id);
+                }
+            }
         }
     }
 
     draw(){
         if(this != null)
             this.drawCurrentNode(this.root);
+    }
+
+    getXPos(nodePosition){ // 150 * position
+        return (((innerWidth * 5 / 6) / this.numNodes) * nodePosition);
+    }
+
+    getYPos(height){ // 150 * height
+        return 150 * height;
     }
 
     drawCurrentNode(node){
@@ -144,7 +301,7 @@ class BinarySearchTree {
                     level++;
                 }
             }
-            node.drawNode(node.position * 150, height * 150, 50);
+            node.drawNode(this.getXPos(node.position), this.getYPos(height), 50);
             this.drawCurrentNode(node.left);
             this.drawCurrentNode(node.right);
             if(node.left != null){
@@ -158,8 +315,8 @@ class BinarySearchTree {
                     }
                 }
                 ctx.beginPath();
-                ctx.moveTo(node.position * 150, height * 150);
-                ctx.lineTo(node.left.position * 150, height2 * 150);
+                ctx.moveTo(this.getXPos(node.position), this.getYPos(height));
+                ctx.lineTo(this.getXPos(node.left.position), this.getYPos(height2));
                 ctx.stroke();
             }
             if(node.right != null){
@@ -173,8 +330,8 @@ class BinarySearchTree {
                     }
                 }
                 ctx.beginPath();
-                ctx.moveTo(node.position * 150, height * 150);
-                ctx.lineTo(node.right.position * 150, height2 * 150);
+                ctx.moveTo(this.getXPos(node.position), this.getYPos(height));
+                ctx.lineTo(this.getXPos(node.right.position), this.getYPos(height2));
                 ctx.stroke();
             }
         }
