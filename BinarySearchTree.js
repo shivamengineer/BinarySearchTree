@@ -281,6 +281,8 @@ class BinarySearchTree {
             this.drawCurrentNode(this.root);
     }
 
+
+
     getXPos(nodePosition){ // 150 * position
         return (((innerWidth * 5 / 6) / this.numNodes) * nodePosition);
     }
@@ -289,11 +291,34 @@ class BinarySearchTree {
         return 150 * height;
     }
 
+    collidesWithNode(x, y){
+        return this.collidesWith(this.root, x, y);
+    }
+
+    collidesWith(node, x, y){
+        if(node.collides(x, y)){
+            return node.value;
+        }
+        var ret = -999;
+        if(node.left != null){
+            ret = this.collidesWith(node.left, x, y);
+            if(ret != -999){
+                return ret;
+            }
+        }
+        if(node.right != null){
+            ret = this.collidesWith(node.right, x, y);
+            if(ret != -999){
+                return ret;
+            }
+        }
+        return ret;
+    }
+
     drawCurrentNode(node){
         if(node != null){
-            //draw
             var height = -1;
-            var level = 0
+            var level = 0;
             while(height == -1){
                 if(node.id < (2 ** level)){
                     height = level;
@@ -301,7 +326,8 @@ class BinarySearchTree {
                     level++;
                 }
             }
-            node.drawNode(this.getXPos(node.position), this.getYPos(height), 50);
+            node.setNodeDrawingAttributes(this.getXPos(node.position), this.getYPos(height), 50);
+            node.drawNode();
             this.drawCurrentNode(node.left);
             this.drawCurrentNode(node.right);
             if(node.left != null){

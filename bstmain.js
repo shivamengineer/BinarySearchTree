@@ -12,6 +12,9 @@ bst.insert(2);
 bst.insert(20);
 bst.insert(12);
 
+var canRotate;
+var lastX;
+
 function clearscreen(){
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -19,17 +22,38 @@ function clearscreen(){
 
 function draw(){
     clearscreen();
-    
     bst.draw();
-
-    //n.drawNode(100, 500, 40);
-
-    /*ctx.beginPath();
-    ctx.arc(300, 300, 100, 0, 2 * Math.PI, false);
-    //ctx.fill();
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = "blue";
-    ctx.stroke();*/
 }
 
+function mouseDown(e){
+    var x = e.clientX;
+    var y = e.clientY;
+    lastX = x;
+    canRotate = bst.collidesWithNode(x, y);
+    //console.log(bst.collidesWithNode(x, y));
+    mousedown = true;
+}
+
+function mouseUp(e){
+    var x = e.clientX;
+    if(canRotate != -999){
+        if(x > lastX + 50){
+            bst.rotateRight(canRotate);
+        } else if(x < lastX - 50){
+            bst.rotateLeft(canRotate);
+        }
+    }
+    //console.log(bst.collidesWithNode(x, y));
+    mousedown = false;
+}
+
+function keyboard(e){
+    switch(e.keyCode){
+        //case ...:
+    }
+}
+
+window.addEventListener("mousedown", mouseDown, true);
+window.addEventListener("mouseup", mouseUp, true);
+window.addEventListener("keydown", keyboard, true);
 setInterval(draw, 16);
