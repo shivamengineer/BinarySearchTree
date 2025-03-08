@@ -11,6 +11,8 @@ bst.insert(10);
 bst.insert(2);
 bst.insert(20);
 bst.insert(12);
+bst.insert(1);
+bst.insert(4);
 
 var canRotate;
 var lastX;
