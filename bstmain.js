@@ -81,7 +81,7 @@ function keyboard(e){
     if(e.keyCode >= 48 && e.keyCode <= 57){
         inputBox.text *= 10;
         inputBox.text += e.keyCode - 48;
-        if(changeSize){
+        if(changeSize && inputBox.text != 0){
             inputBox.width += 30;
         } else {
             changeSize = true;
@@ -93,6 +93,10 @@ function keyboard(e){
             inputBox.text = 0;
             inputBox.width = initialWidth;
             changeSize = false;
+            break;
+        case 8:
+            if(inputBox.text >= 10){ inputBox.width -= 30; }
+            inputBox.text = Math.floor(inputBox.text / 10);
             break;
     }
 }
