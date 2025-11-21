@@ -16,6 +16,7 @@ class BinarySearchTree {
             this.root.numLeft = 0;
             this.root.numRight = 0;
             this.numNodes = 1;
+            this.root.height = 1;
             this.height = 1;
         } else {
             this.insertNode(this.root, node);
@@ -24,6 +25,8 @@ class BinarySearchTree {
     }
 
     insertNode(root, node){
+        node.height = root.height + 1;
+        if(node.height > this.height) { this.height = node.height; }
         if(node.value > root.value){
             if(root.right == null){
                 node.id = (root.id * 2) + 1;
@@ -79,6 +82,7 @@ class BinarySearchTree {
             node.right = this.removeNode(node.right, nextNode.value);
             return node;
         }
+        this.updateHeightsOfTree(this.root, 1);
     }
 
     findMinNode(node){
@@ -190,8 +194,7 @@ class BinarySearchTree {
 
     rotateRight(value){
         var n = this.findNodeFromValue(value);
-        if(n != null)
-            this.rotateNodeRight(n);
+        if(n != null) this.rotateNodeRight(n);
     }
 
     rotateNodeRight(node){
@@ -274,6 +277,15 @@ class BinarySearchTree {
                 }
             }
         }
+        this.updateHeightsOfTree(this.root, 1);
+    }
+
+    updateHeightsOfTree(node, height){
+        node.height = height;
+        if(this.height < node.height) { this.height = node.height; }
+        if(node.left != null) { this.updateHeightsOfTree(node.left, height + 1); }
+        if(node.right != null) { this.updateHeightsOfTree(node.right, height + 1); }
+        console.log(this.height);
     }
 
     draw(){
@@ -288,7 +300,7 @@ class BinarySearchTree {
     }
 
     getYPos(height){ // 150 * height
-        return 150 * height;
+        return (((innerHeight * 5 / 6) / this.height) * height);
     }
 
     collidesWithNode(x, y){
@@ -314,6 +326,7 @@ class BinarySearchTree {
         }
         return ret;
     }
+
 
     drawCurrentNode(node){
         if(node != null){
