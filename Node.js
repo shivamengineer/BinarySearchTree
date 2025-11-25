@@ -18,13 +18,20 @@ class Node {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
         ctx.lineWidth = 5;
-        ctx.strokeStyle = "blue";
+        ctx.strokeStyle = '#FF2400';
         ctx.stroke();
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "#FF2400";
         var fontSize = "";
         fontSize += this.radius;
         fontSize += "px Arial";
         ctx.font = fontSize;
         ctx.fillText(this.value, this.x - (this.radius / 4), this.y + (this.radius / 3), this.radius);
+    }
+
+    fillNode(){
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = "grey";
+        ctx.fill();
     }
 }

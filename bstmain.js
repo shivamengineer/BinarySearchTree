@@ -12,16 +12,11 @@ var changeSize = false;
 
 var n = new Node(2, 0);
 var bst = new BinarySearchTree();
-/*bst.insert(5);
-bst.insert(10);
-bst.insert(2);
-bst.insert(20);
-bst.insert(12);
-bst.insert(1);
-bst.insert(4);*/
 
+var mousedown = false;
 var canRotate = false;
 var lastX;
+var lastY;
 
 function clearscreen(){
     ctx.fillStyle = "black";
@@ -31,8 +26,8 @@ function clearscreen(){
 function drawRect(rect){
     ctx.fillStyle = rect.color;
     ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
-    ctx.fillStyle = "blue";
-    ctx.strokeStyle = "blue";
+    ctx.fillStyle = "#FF2400";
+    ctx.strokeStyle = "#FF2400";
     ctx.lineWidth = 5;
     ctx.font = "50px Arial";
     ctx.strokeText(rect.text, rect.x + 10, rect.y + (3 * rect.height / 4));
@@ -55,6 +50,7 @@ function mouseDown(e){
     var x = e.clientX;
     var y = e.clientY;
     lastX = x;
+    lastY = y;
     input = false;
     if(mouseCollides(x, y, inputBox)){
         input = true;
@@ -63,14 +59,25 @@ function mouseDown(e){
     if(bst.height > 0)
         canRotate = bst.collidesWithNode(x, y);
     mousedown = true;
+    bst.moveNodeX(x, y);
+}
+
+function mouseMove(e){
+    if(mousedown){
+        var x = e.clientX;
+        var y = e.clientY;
+        bst.moveNodeX(x, y);
+    }
 }
 
 function mouseUp(e){
     var x = e.clientX;
+    var y = e.clientY;
+    bst.resetSelectedNode();
     if(canRotate != -999){
-        if(x > lastX + 50){
+        if(x > lastX + 50 && y > lastY + 50){
             bst.rotateRight(canRotate);
-        } else if(x < lastX - 50){
+        } else if(x < lastX - 50 && y > lastY + 50){
             bst.rotateLeft(canRotate);
         }
     }
@@ -102,6 +109,7 @@ function keyboard(e){
 }
 
 window.addEventListener("mousedown", mouseDown, true);
+window.addEventListener("mousemove", mouseMove, true);
 window.addEventListener("mouseup", mouseUp, true);
 window.addEventListener("keydown", keyboard, true);
 setInterval(draw, 16);
