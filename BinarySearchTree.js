@@ -300,18 +300,18 @@ class BinarySearchTree {
 
 
 
-    getXPos(nodePosition, node){ // 150 * position
+    getX(node){
         if(this.selectedNode != node.value) {
-            return (((innerWidth * 5 / 6) / this.numNodes) * nodePosition);
+            return (((innerWidth * 5 / 6) / this.numNodes) * node.position);
         } else {
             return this.mouseX;
         }
         
     }
 
-    getYPos(height, node){ // 150 * height
+    getY(node){
         if(this.selectedNode != node.value){
-            return (((innerHeight * 5 / 6) / this.height) * height);
+            return (((innerHeight * 5 / 6) / this.height) * node.height);
         } else {
             return this.mouseY;
         }
@@ -357,50 +357,39 @@ class BinarySearchTree {
 
     drawCurrentNode(node){
         if(node != null){
-            var height = -1;
-            var level = 0;
-            while(height == -1){
-                if(node.id < (2 ** level)){
-                    height = level;
-                } else {
-                    level++;
-                }
-            }
-            node.setNodeDrawingAttributes(this.getXPos(node.position, node), this.getYPos(height, node), 50);
+           this.setHeight(node);
+            node.setNodeDrawingAttributes(this.getX(node), this.getY(node), 50);
             if(node.left != null){
-                var height2 = -1;
-                var level = 0
-                while(height2 == -1){
-                    if(node.left.id < (2 ** level)){
-                        height2 = level;
-                    } else {
-                        level++;
-                    }
-                }
-                ctx.beginPath();
-                ctx.moveTo(this.getXPos(node.position, node), this.getYPos(height, node));
-                ctx.lineTo(this.getXPos(node.left.position, node.left), this.getYPos(height2, node.left));
-                ctx.stroke();
+                this.setHeight(node.left);
+                this.drawLine(this.getX(node), this.getY(node), this.getX(node.left), this.getY(node.left));
             }
             if(node.right != null){
-                var height2 = -1;
-                var level = 0
-                while(height2 == -1){
-                    if(node.right.id < (2 ** level)){
-                        height2 = level;
-                    } else {
-                        level++;
-                    }
-                }
-                ctx.beginPath();
-                ctx.moveTo(this.getXPos(node.position, node), this.getYPos(height, node));
-                ctx.lineTo(this.getXPos(node.right.position, node.right), this.getYPos(height2, node.right));
-                ctx.stroke();
+                this.setHeight(node.right);
+                this.drawLine(this.getX(node), this.getY(node), this.getX(node.right), this.getY(node.right));
             }
             node.fillNode();
             node.drawNode();
             this.drawCurrentNode(node.left);
             this.drawCurrentNode(node.right);
+        }
+    }
+
+    drawLine(x1, y1, x2, y2){
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+    }
+
+    setHeight(node){
+        node.height = -1;
+        var level = 0;
+        while(node.height == -1){
+            if(node.id < (2 ** level)){
+                node.height = level;
+            } else {
+                level++;
+            }
         }
     }
 }
