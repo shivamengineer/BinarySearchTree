@@ -239,6 +239,7 @@ class BinarySearchTree {
             }
         }
         this.updateHeightsOfTree(this.root, 1);
+        this.setMoving(this.root);
     }
 
     rotateLeft(value){
@@ -284,6 +285,7 @@ class BinarySearchTree {
             }
         }
         this.updateHeightsOfTree(this.root, 1);
+        this.setMoving(this.root);
     }
 
     updateHeightsOfTree(node, height){
@@ -298,15 +300,12 @@ class BinarySearchTree {
             this.drawCurrentNode(this.root);
     }
 
-
-
     getX(node){
         if(this.selectedNode != node.value) {
             return (((innerWidth * 5 / 6) / this.numNodes) * node.position);
         } else {
             return this.mouseX;
         }
-        
     }
 
     getY(node){
@@ -315,7 +314,6 @@ class BinarySearchTree {
         } else {
             return this.mouseY;
         }
-        
     }
 
     collidesWithNode(x, y){
@@ -354,18 +352,31 @@ class BinarySearchTree {
         this.mouseY = y;
     }
 
+    setMoving(node){
+        if(node != null){
+            this.setHeight(node);
+            node.setTargetDrawingAttributes(this.getX(node), this.getY(node));
+            node.moving = true;
+            this.setMoving(node.left);
+            this.setMoving(node.right);
+        }
+    }
 
     drawCurrentNode(node){
         if(node != null){
-           this.setHeight(node);
-            node.setNodeDrawingAttributes(this.getX(node), this.getY(node), 50);
+            this.setHeight(node);
+            if(node.moving){
+                node.updateDrawingAttributes();
+            } else {
+                node.setNodeDrawingAttributes(this.getX(node), this.getY(node), 50);
+            }
             if(node.left != null){
                 this.setHeight(node.left);
-                this.drawLine(this.getX(node), this.getY(node), this.getX(node.left), this.getY(node.left));
+                this.drawLine(node.x, node.y, node.left.x, node.left.y);
             }
             if(node.right != null){
                 this.setHeight(node.right);
-                this.drawLine(this.getX(node), this.getY(node), this.getX(node.right), this.getY(node.right));
+                this.drawLine(node.x, node.y, node.right.x, node.right.y);
             }
             node.fillNode();
             node.drawNode();

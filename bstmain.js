@@ -19,7 +19,7 @@ var lastX;
 var lastY;
 
 function clearscreen(){
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "maroon";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -56,8 +56,7 @@ function mouseDown(e){
         input = true;
     }
 
-    if(bst.height > 0)
-        canRotate = bst.collidesWithNode(x, y);
+    if(bst.height > 0){ canRotate = bst.collidesWithNode(x, y); }
     mousedown = true;
     bst.moveNodeX(x, y);
 }
@@ -73,6 +72,8 @@ function mouseMove(e){
 function mouseUp(e){
     var x = e.clientX;
     var y = e.clientY;
+    var startX = x;
+    var startY = y;
     bst.resetSelectedNode();
     if(canRotate != -999){
         if(x > lastX + 50 && y > lastY + 50){

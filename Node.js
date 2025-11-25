@@ -2,16 +2,58 @@ class Node {
     constructor(value, id){
         this.value = value;
         this.id = id;
+        this.moving = false;
     }
 
     setNodeDrawingAttributes(x, y, radius){
         this.x = x;
         this.y = y;
+        this.counter = 0;
         this.radius = radius;
+    }
+
+    setTargetDrawingAttributes(x, y){
+        this.startX = x;
+        this.startY = y;
+        this.targetX = x;
+        this.targetY = y;
+        this.moving = true;
+        this.movingX = true;
+        this.movingY = true;
     }
 
     collides(mouseX, mouseY){
         return (((mouseX - this.x) ** 2) + ((mouseY - this.y) ** 2) < (this.radius ** 2));
+    }
+
+    updateDrawingAttributes(){
+        this.moveX();
+        this.moveY();
+        if( !this.movingX && !this.movingY ){ this.moving = false; }
+    }
+
+    moveX(){
+        if(this.x < this.targetX - 4){
+            this.x += 5;
+        } else if(this.x > this.targetX + 4){
+            this.x -= 5;
+        } else {
+            this.movingX = false;
+        }
+    }
+
+    moveY(){
+        if(this.y < this.targetY - 4){
+            this.y += 5;
+        } else if(this.y > this.targetY + 4){
+            this.y -= 5;
+        } else {
+            this.movingY = false;
+        }
+    }
+
+    isMoving(){
+        return moving;
     }
 
     drawNode(){
