@@ -61,25 +61,25 @@ class BinarySearchTree {
             this.removeNode(node.left, value);
             node.position--;
             this.decreasePositionForSubtree(node.right);
-            this.updateHeightsOfTree(this.root, 1);
+            this.updateTreeHeight();
             return node;
         } else if(value > node.value){
             this.removeNode(node.right, value);
-            this.updateHeightsOfTree(this.root, 1);
+            this.updateTreeHeight();
             return node;
         } else {
             if(node.left == null & node.right == null){
                 node = null;
-                this.updateHeightsOfTree(this.root, 1);
+                this.updateTreeHeight();
                 return null;
             }
             if(node.left == null){
                 node = node.right;
-                this.updateHeightsOfTree(this.root, 1);
+                this.updateTreeHeight();
                 return node;
             } else if(node.right == null){
                 node = node.left;
-                this.updateHeightsOfTree(this.root, 1);
+                this.updateTreeHeight();
                 return node;
             }
 
@@ -87,7 +87,7 @@ class BinarySearchTree {
             node.value = nextNode.value;
 
             node.right = this.removeNode(node.right, nextNode.value);
-            this.updateHeightsOfTree(this.root, 1);
+            this.updateTreeHeight();
             return node;
         }
     }
@@ -238,7 +238,7 @@ class BinarySearchTree {
                 }
             }
         }
-        this.updateHeightsOfTree(this.root, 1);
+        this.updateTreeHeight();
         this.setMoving(this.root);
     }
 
@@ -284,8 +284,13 @@ class BinarySearchTree {
                 }
             }
         }
-        this.updateHeightsOfTree(this.root, 1);
+        this.updateTreeHeight();
         this.setMoving(this.root);
+    }
+
+    updateTreeHeight(){
+        this.height = 0;
+        this.updateHeightsOfTree(this.root, 1);
     }
 
     updateHeightsOfTree(node, height){
