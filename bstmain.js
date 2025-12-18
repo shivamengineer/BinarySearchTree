@@ -15,11 +15,12 @@ var bst = new BinarySearchTree();
 
 var mousedown = false;
 var canRotate = false;
+var lastSelected = -999;
 var lastX;
 var lastY;
 
 function clearscreen(){
-    ctx.fillStyle = "maroon";
+    ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -76,6 +77,7 @@ function mouseUp(e){
     var startY = y;
     bst.resetSelectedNode();
     if(canRotate != -999){
+        lastSelected = canRotate;
         if(x > lastX + 50 && y > lastY + 50){
             bst.rotateRight(canRotate);
         } else if(x < lastX - 50 && y > lastY + 50){
@@ -105,6 +107,12 @@ function keyboard(e){
         case 8:
             if(inputBox.text >= 10){ inputBox.width -= 30; }
             inputBox.text = Math.floor(inputBox.text / 10);
+            break;
+        case 46:
+            if(lastSelected != -999){
+                //bst.remove(lastSelected);
+            }
+            lastSelected = -999;
             break;
     }
 }

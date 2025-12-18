@@ -29,7 +29,10 @@ class Node {
     updateDrawingAttributes(){
         this.moveX();
         this.moveY();
-        if( !this.movingX && !this.movingY ){ this.moving = false; }
+        if( !this.movingX && !this.movingY ){ 
+            this.moving = false;
+            this.inserting = false;
+        }
     }
 
     moveX(){
@@ -60,9 +63,14 @@ class Node {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
         ctx.lineWidth = 5;
-        ctx.strokeStyle = '#FF2400';
+        if(this.inserting){
+            ctx.strokeStyle = "#4518adff";
+            ctx.fillStyle = "#4518adff";
+        } else {
+            ctx.strokeStyle = "#FF2400";
+            ctx.fillStyle = "#FF2400";
+        }
         ctx.stroke();
-        ctx.fillStyle = "#FF2400";
         var fontSize = "";
         fontSize += this.radius;
         fontSize += "px Arial";
@@ -73,7 +81,7 @@ class Node {
     fillNode(){
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
-        ctx.fillStyle = "grey";
+        ctx.fillStyle = "white";
         ctx.fill();
     }
 }

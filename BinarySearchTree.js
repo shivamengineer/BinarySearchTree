@@ -21,8 +21,11 @@ class BinarySearchTree {
             this.root.height = 1;
             this.height = 1;
         } else {
-            this.insertNode(this.root, node);
+            node.inserting = true;
             this.numNodes++;
+            node.setNodeDrawingAttributes(this.root.x, this.root.y - 60, 50)
+            this.insertNode(this.root, node);
+            this.setMoving(this.root);
         }
     }
 
@@ -34,7 +37,9 @@ class BinarySearchTree {
                 node.id = (root.id * 2) + 1;
                 root.right = node;
                 node.position = root.position + 1;
+                node.setTargetDrawingAttributes(this.getX(node), this.getY(node));
             } else {
+                node.setTargetDrawingAttributes(this.getX(root.right), this.getY(root.right) - 60);
                 this.insertNode(root.right, node);
             }
         } else {
@@ -44,7 +49,9 @@ class BinarySearchTree {
                 node.id = root.id * 2;
                 root.left = node;
                 node.position = root.position - 1;
+                node.setTargetDrawingAttributes(this.getX(node), this.getY(node));
             } else {
+                node.setTargetDrawingAttributes(this.getX(root.left), this.getY(root.left) - 60);
                 this.insertNode(root.left, node);
             }
         }
