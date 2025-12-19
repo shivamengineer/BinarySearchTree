@@ -75,7 +75,7 @@ class BinarySearchTree {
             this.updateTreeHeight();
             return node;
         } else {
-            if(node.left == null & node.right == null){
+            if(node.left == null && node.right == null){
                 node = null;
                 this.updateTreeHeight();
                 return null;
@@ -210,8 +210,10 @@ class BinarySearchTree {
     }
 
     rotateNodeRight(node){
+        node.rotating = true;
         if(node.value == this.root.value){
             if(this.root.left != null){
+                this.root.left.rotatingUp = true;
                 var n = this.root;
                 this.root = this.root.left;
                 if(this.root.right != null){
@@ -229,6 +231,7 @@ class BinarySearchTree {
         } else {
             var parent = this.findParentFromValue(node.value);
             if(node.left != null){
+                node.left.rotatingUp = true;
                 var leftNode = node.left;
                 if(leftNode.right != null){
                     node.left = leftNode.right;
@@ -256,8 +259,10 @@ class BinarySearchTree {
     }
 
     rotateNodeLeft(node){
+        node.rotating = true;
         if(node.value == this.root.value){
             if(this.root.right != null){
+                this.root.right.rotatingUp = true;
                 var n = this.root;
                 this.root = this.root.right;
                 if(this.root.left != null){
@@ -275,6 +280,7 @@ class BinarySearchTree {
         } else {
             var parent = this.findParentFromValue(node.value);
             if(node.right != null){
+                node.right.rotatingUp = true;
                 var rightNode = node.right;
                 if(rightNode.left != null){
                     node.right = rightNode.left;
@@ -383,11 +389,11 @@ class BinarySearchTree {
                 node.setNodeDrawingAttributes(this.getX(node), this.getY(node), 50);
             }
             if(node.left != null){
-                this.setHeight(node.left);
+                this.setLineColors(node.left);
                 this.drawLine(node.x, node.y, node.left.x, node.left.y);
             }
             if(node.right != null){
-                this.setHeight(node.right);
+                this.setLineColors(node.right);
                 this.drawLine(node.x, node.y, node.right.x, node.right.y);
             }
             node.fillNode();
@@ -415,4 +421,17 @@ class BinarySearchTree {
             }
         }
     }
+
+    setLineColors(node){
+        this.setHeight(node);
+        if(node.inserting){
+            ctx.strokeStyle = "#1876adff"
+        } else if(node.rotating){
+            ctx.strokeStyle = "#a11996ff";
+        } else if(node.rotatingUp){
+            ctx.strokeStyle = "#31ff31ff";
+        } else {
+           ctx.strokeStyle = "#FF2400";
+        }
+    }    
 }
